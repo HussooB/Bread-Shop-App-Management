@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext';
+import { API_URL } from '../config';
+const BAKERY_BG = require('../assets/bakery-bg.jpg');
 
 export default function Wheat() {
   const [quantity, setQuantity] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const router = useRouter();
+  const { theme } = useTheme();
 
   const handleSubmit = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       // Replace with your actual backend IP and endpoint
-      const response = await fetch('http://192.168.21.57:5000/api/wheat', {
+      const response = await fetch(`${API_URL}/api/wheat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,45 +43,49 @@ export default function Wheat() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add Wheat Stock</Text>
-        <View style={styles.placeholder} />
-      </View>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Quantity (kg)</Text>
-            <TextInput
-              style={styles.input}
-              value={quantity}
-              onChangeText={setQuantity}
-              keyboardType="numeric"
-              placeholder="Enter quantity"
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Date</Text>
-            <TextInput
-              style={styles.input}
-              value={date}
-              onChangeText={setDate}
-              placeholder="YYYY-MM-DD"
-            />
-          </View>
-
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Add Wheat Stock</Text>
+    <ImageBackground source={BAKERY_BG} style={{ flex: 1 }} resizeMode="cover">
+      <View style={[styles.container, theme === 'dark' && { backgroundColor: 'rgba(40, 30, 10, 0.92)' }]}>
+        {/* Header */}
+        <View style={[styles.header, theme === 'dark' && { backgroundColor: '#2d1a05' }]}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={theme === 'dark' ? '#fff' : '#333'} />
           </TouchableOpacity>
+          <Text style={[styles.headerTitle, theme === 'dark' && { color: '#fff8e1' }]}>Add Wheat Stock</Text>
+          <View style={styles.placeholder} />
         </View>
-      </ScrollView>
-    </View>
+
+        <ScrollView style={styles.content}>
+          <View style={[styles.form, theme === 'dark' && { backgroundColor: '#3a2a12', borderColor: '#2d1a05' }]}>
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, theme === 'dark' && { color: '#fff8e1' }]}>Quantity (kg)</Text>
+              <TextInput
+                style={[styles.input, theme === 'dark' && { backgroundColor: '#2d1a05', color: '#fff' }]}
+                value={quantity}
+                onChangeText={setQuantity}
+                keyboardType="numeric"
+                placeholder="Enter quantity"
+                placeholderTextColor={theme === 'dark' ? '#fff8e1' : '#8B5C2A'}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, theme === 'dark' && { color: '#fff8e1' }]}>Date</Text>
+              <TextInput
+                style={[styles.input, theme === 'dark' && { backgroundColor: '#2d1a05', color: '#fff' }]}
+                value={date}
+                onChangeText={setDate}
+                placeholder="YYYY-MM-DD"
+                placeholderTextColor={theme === 'dark' ? '#fff8e1' : '#8B5C2A'}
+              />
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Add Wheat Stock</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 }
 

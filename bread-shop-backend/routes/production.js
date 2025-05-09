@@ -27,4 +27,4 @@ router.put('/:id', updateProduction);
 // Delete production record
 router.delete('/:id', deleteProduction);
 
-module.exports = router; 
+module.exports = router;

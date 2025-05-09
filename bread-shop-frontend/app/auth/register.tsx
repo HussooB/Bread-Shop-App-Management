@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
-
+import { API_URL } from '../../config';
 export default function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -21,7 +21,7 @@ export default function Register() {
     }
     try {
       console.log('Attempting registration with:', { firstName, lastName, phone }); // Log attempt
-      const response = await fetch('http://192.168.21.57:5000/api/auth/register', {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firstName, lastName, phone, password }),

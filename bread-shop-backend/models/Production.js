@@ -12,22 +12,8 @@ const productionSchema = new mongoose.Schema({
     default: Date.now
   },
   breadTypes: [{
-    type: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-    unit: {
-      type: String,
-      required: true,
-      enum: ['piece', 'kg'],
-      default: 'piece'
-    }
+    breadType: { type: String, required: true, trim: true },
+    quantity: { type: Number, required: true, min: 0 }
   }],
   notes: {
     type: String,
@@ -40,15 +26,12 @@ const productionSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  },
-  breadType: String,
-  quantity: Number
+  }
 });
 
-// Update the updatedAt timestamp before saving
 productionSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Production', productionSchema); 
+module.exports = mongoose.models.Production || mongoose.model('Production', productionSchema);
